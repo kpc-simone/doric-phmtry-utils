@@ -48,10 +48,10 @@ if __name__ == '__main__':
     baseline_post_end = args.baseline_post_end
     plot = True
 
-    data_dir = askdirectory()
+    data_dir = askdirectory( title = "Select folder containing raw photometry data" )
     phmtry_files = [f for f in os.listdir(data_dir) if '.doric' in f]
     
-    out_data_dir = os.path.join(data_dir,'../processed')
+    out_data_dir = os.path.join(data_dir,'../phmtry-processed')
     if not os.path.exists(out_data_dir):
         os.mkdir(out_data_dir)
     for phmtry_file in phmtry_files:
@@ -113,7 +113,10 @@ if __name__ == '__main__':
         ax4.plot(phdf['time'],phdf['fluo465-zsc'],label='465 channel')
         ax4.set_title('Z-score normalization')
         ax4.legend(loc='lower right')
+        
+        fig.suptitle(phmtry_file)
         fig.tight_layout()
+        plt.savefig(os.path.join(out_data_dir,'{}-phmtry.pdf'.format(animal)),format='pdf')
         plt.show()
         
         phdf.to_csv(os.path.join(out_data_dir,'{}-phmtry.csv'.format(animal)))
