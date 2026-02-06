@@ -1,0 +1,4 @@
+lmfit
+matplotlib
+pandas
+h5py

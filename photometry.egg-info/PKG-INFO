@@ -4,42 +4,107 @@ Version: 0.1.0
 Summary: A collection of utilities for processing and analyzing photometry data
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
+Requires-Dist: lmfit
+Requires-Dist: matplotlib
+Requires-Dist: pandas
+Requires-Dist: h5py
 
-# doric-phmtry-utils: Tools for processing photometry timeseries data
-This repository contains scripts for common processing/analysis steps of photometry data steps in behavioral/systems neuroscience.
+````markdown
+# doric-phmtry-utils
 
-Scripts Included:
+**Tools for processing fiber photometry time series data in behavioral and systems neuroscience.**
 
-- [x] Convert from .doric format to .csv and apply basic processing steps.
-	- [x] Apply photobleaching correction
-	- [x] Apply motion artifact correction
-	- [x] Convert to z-score
-- [x] Extract segments of timeseries data given a spreadsheet
+This repository provides Python scripts to streamline the analysis of fiber photometry data recorded in the `.doric` format, commonly used in neuroscience research. Functions include artifact correction, signal normalization, and event-based extraction of signal segments.
 
-`
+---
+
+## 🔧 Features
+
+- Convert `.doric` files to `.csv` format
+- Apply common preprocessing steps:
+  - Photobleaching correction
+  - Motion artifact correction
+  - Z-score normalization
+- Extract time-aligned segments of data based on external event timing (e.g., from a spreadsheet)
+
+---
+
+## 📦 Installation
+
+Clone the repository and set up the Conda environment:
+
+```bash
 git clone https://github.com/kpc-simone/doric-phmtry-utils.git
 cd doric-phmtry-utils
-conda env create -f environment.yml --name doric-phmtry-utils-env 
-conda activate doric-phmtry-utils
-`
+conda env create -f environment.yml --name doric-phmtry-utils-env
+conda activate doric-phmtry-utils-env
+conda install pip
+python -m pip install -e .
+````
 
-# Usage
-The scripts folder contains tools for processing photometry data in the .doric file format.
+---
 
-### 1. Convert from .doric format to .csv and apply basic processing steps.
+## 🚀 Usage
 
-From the /script folder, run this command with the following optional arguments:
+All scripts are located in the `/scripts` directory. The main script for converting and preprocessing `.doric` files is:
 
-`
-python process_doric_phmtry.py --baseline_pre_start [baseline_pre_start] --baseline_pre_end [baseline_pre_end] --baseline_post_start [baseline_post_start] --baseline_post_end [baseline_post_end]
-`
+### `process_doric_phmtry.py`
 
-Meaning of parameters:
+This script converts `.doric` files to `.csv` and applies optional preprocessing steps. Run from the `/scripts` folder with:
 
-`baseline_pre_start`: Start of the pre-baseline interval for photobleaching correction, relative to the start of the recording. Default is t=100 seconds.
+```bash
+python process_doric_phmtry.py \
+  --baseline_pre_start [baseline_pre_start] \
+  --baseline_pre_end [baseline_pre_end] \
+  --baseline_post_start [baseline_post_start] \
+  --baseline_post_end [baseline_post_end]
+```
 
-`baseline_pre_end`: End of the pre-baseline interval for photobleaching correction, relative to the start of the recording. Default is t=600 seconds.
+#### 📌 Optional Parameters
 
-`baseline_post_start`: Start of the pre-baseline interval for photobleaching correction, relative to the end of the recording. Default is t=500 seconds.
+| Argument                | Description                                                                           | Default Value |
+| ----------------------- | ------------------------------------------------------------------------------------- | ------------- |
+| `--baseline_pre_start`  | Start of **pre-recording** baseline window for photobleaching correction (in seconds) | `100`         |
+| `--baseline_pre_end`    | End of **pre-recording** baseline window                                              | `600`         |
+| `--baseline_post_start` | Start of **post-recording** baseline window, relative to the end of the recording     | `500`         |
+| `--baseline_post_end`   | End of **post-recording** baseline window, relative to the end of the recording       | `0`           |
 
-`baseline_post_end`: End of the pre-baseline interval for photobleaching correction, relative to the end of the recording. Default is t=0 seconds.
+> These intervals define periods used to fit an exponential decay model for correcting photobleaching artifacts. Adjust them based on the typical session structure in your experiment.
+
+---
+
+## 📁 Other Scripts
+
+### `extract_segments_from_events.py`
+
+Extracts segments of time series data aligned to events (e.g., trial onsets) listed in a spreadsheet. Useful for analyzing stimulus-aligned activity or task-related signal dynamics.
+
+---
+
+## 🧪 Example Workflow
+
+1. Convert and preprocess raw `.doric` file:
+
+```bash
+cd scripts
+python process_doric_phmtry.py --baseline_pre_start 100 --baseline_pre_end 600
+```
+
+2. Load the resulting `.csv` file into your preferred analysis tool (Python, R, MATLAB, etc.)
+
+3. Use `extract_segments_from_events.py` to isolate trial-aligned signals for further statistical analysis.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🧠 Background
+
+Fiber photometry allows real-time recording of neural activity via calcium or neurotransmitter indicators. These tools aim to reduce preprocessing friction so that researchers can focus on scientific questions.
+
+```
+```
